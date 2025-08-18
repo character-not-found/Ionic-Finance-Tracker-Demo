@@ -1,0 +1,176 @@
+/* src/pages/Home.css */
+
+ion-toolbar .logo-container {
+    padding-top: 70px;
+    background-color: var(--ion-background-color);
+}
+
+ion-header {
+    box-shadow: none !important;
+    padding-top: 0px;
+}
+
+.logo-container {
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.logo-container img {
+    max-width: 60%;
+    height: auto;
+}
+
+ion-content ion-grid.home-grid {
+    margin-top: 20px;
+}
+
+.dashboard-summary-card {
+    --background: var(--ion-color-tertiary);
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    height: 100%;
+    margin:auto;
+}
+
+.dashboard-summary-card ion-card-header {
+    text-align: center;
+    padding-bottom: 0;
+}
+
+.dashboard-summary-card ion-card-title {
+    color: var(--ion-color-primary);
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.dashboard-summary-card ion-card-content {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 20px;;
+}
+
+/* Styles for the individual summary items, replicating the web version */
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+}
+
+.summary-item h4 {
+    margin: 5px;
+    color: var(--ion-color-light);
+    font-size: 1.1rem;
+    font-weight: normal;
+    text-align: center;
+}
+
+/* Specific styles for the summary values from the web version */
+.dashboard-summary-card ion-card-content .profit-loss-display,
+.dashboard-summary-card ion-card-content .monthly-average-display,
+.dashboard-summary-card ion-card-content .cash-on-hand-display {
+    font-size: 2.5rem; /* Made the numbers much larger as requested */
+    font-weight: bold;
+    margin-top: 10px; /* Increased margin for more space */
+}
+
+/* Conditional colors for profit/loss, matching the web version */
+.positive-amount {
+    color: #00e676; /* A green color for profit */
+}
+
+.negative-amount {
+    color: #ff5252; /* A red color for loss */
+}
+
+.chart-container {
+    flex-grow: 1;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding-top: 0px;
+}
+
+.total-summary-card-bottom {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--ion-color-primary-tint);
+    background-color: rgba(55, 65, 81, 0.8);
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-top: 10px;
+    text-align: center;
+    justify-self: center;
+    width: 75%;
+}
+
+.global-summary-chart {
+    margin-bottom: 2rem;
+}
+
+.months-popover {
+    --background: var(--ion-color-tertiary);
+}
+
+.months-list {
+    padding: 0;
+}
+
+.months-list ion-item {
+    color: var(--ion-color-secondary);
+    --border-color: var(--ion-color-secondary-shade);
+    padding: 0 30px;
+}
+
+.months-list ion-label {
+    text-align: center;
+    margin: 0;
+}
+
+.dashboard-summary-card ion-text {
+    color: var(--ion-color-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.no-data {
+    height: 250px;
+}
+
+.legend-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin: 5px 10px;
+    white-space: nowrap;
+}
+
+.legend-color-box {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    margin-right: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.legend-label {
+    color: var(--ion-color-light);
+    font-size: 0.9rem;
+}

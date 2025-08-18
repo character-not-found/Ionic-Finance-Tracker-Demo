@@ -1,0 +1,193 @@
+/* src/pages/Home.css */
+
+ion-toolbar .logo-container {
+    padding-top: 70px;
+    background-color: var(--ion-background-color);
+}
+
+ion-header {
+    box-shadow: none !important;
+    padding-top: 0px;
+}
+
+ion-toolbar {
+    --background: var(--ion-background-color);
+}
+
+.logo-container {
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.logo-container img {
+    max-width: 60%;
+    height: auto;
+}
+
+ion-toolbar .close-button {
+    padding-top: 60px;
+    background-color: var(--ion-background-color);
+    margin: 0 10px;
+}
+
+.management-card {
+    --background: var(--ion-color-tertiary);
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    height: 100%;
+    margin:auto;
+}
+
+.management-card ion-card {
+    --background: var(--ion-color-tertiary-shade);
+    border-radius: 20px;
+}
+
+.management-card ion-card-header {
+    text-align: center;
+    padding-bottom: 0;
+}
+
+.management-card ion-card-title {
+    color: var(--ion-color-primary);
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.management-card ion-card-content {
+    padding: 10px;
+}
+
+ion-grid .management-list  {
+    background-color: var(--ion-color-tertiary-shade);
+}
+
+.management-list ion-col {
+    color: var(--ion-text-color);
+    border-left: 1px dotted var(--ion-color-secondary);
+}
+
+.management-list ion-row {
+    border-right: 1px dotted var(--ion-color-secondary);
+}
+
+.grid-list-card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    margin-top: 5px;
+    padding-bottom: 5px;
+    background-color: var(--ion-color-tertiary-tint);
+    border-radius: 10px !important;
+}
+
+.management-accordion-list ion-grid{
+    background-color: var(--ion-color-tertiary-tint);
+}
+
+.management-list-header {
+    color: var(--ion-text-color);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding-top: 12px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.management-list-header ion-col {
+    color: var(--ion-text-color);
+    border-left: 1px dotted var(--ion-color-secondary);
+    border-top: 1px dotted var(--ion-color-secondary);
+    border-bottom: 1px dotted var(--ion-color-secondary);
+}
+
+.management-list-header ion-row {
+    border-right: 1px dotted var(--ion-color-secondary);
+}
+
+.management-accordion-list ion-item {
+    --inner-padding-end: 0;
+    --inner-padding-start: 0;
+    --min-height: 0;
+}
+
+.management-accordion-list .expanded-content {
+    border-bottom: 1px dotted var(--ion-color-secondary);
+    border-left: 1px dotted var(--ion-color-secondary);
+    border-right: 1px dotted var(--ion-color-secondary);
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+.management-accordion-list .expanded-content.expanded {
+    max-height: 100px;
+    opacity: 1;
+    overflow: visible;
+}
+
+.management-list .expanded-content ion-col {
+    border-left: none;
+}
+
+.management-list .expanded-content ion-row {
+    border-right: none;
+}
+
+.management-list-item-grid {
+    margin: 1px;
+}
+
+.management-accordion-list {
+    padding-bottom: 0;
+}
+
+ion-modal ion-input {
+    font-weight: 300;
+}
+
+.management-edit-grid {
+    background-color: var(--ion-background-color);
+    margin-top: 0 !important;
+}
+
+ion-modal ion-item {
+    --background: var(--ion-background-color);
+}
+
+ion-modal ion-label {
+    font-weight: 600 ;
+    font-size: 1.2rem !important;
+    padding: 2px 0 !important;
+}
+
+ion-modal ion-input {
+    --color: var(--ion-color-light);
+    --placeholder-color: var(--ion-color-medium);
+    font-weight: 300;
+}
+
+.management-accordion-list {
+    transition: transform 0.3s ease-in-out;
+}
+
+.management-content.keyboard-up-alphanumeric {
+    transform: translateY(-22%);
+}
+
+.management-content.keyboard-up-numeric {
+    transform: translateY(-16%);
+}
+
+.alert-message-pre-line {
+    white-space: pre-line;
+}
+
+.alert-message {
+    padding-top: 20px !important;
+    color: var(--ion-color-secondary-shade) !important;
+}
