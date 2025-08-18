@@ -151,7 +151,7 @@ const ExpensesPage: React.FC = () => {
             <IonHeader>
                 <IonToolbar>
                     <div className="logo-container">
-                        <img src="/assets/logos/tuk-n-roll-logo_verde-1.svg" alt="TukNRoll Logo" />
+                        <img src="/assets/logos/demo_logo.svg" alt="Demo Logo" />
                     </div>
                 </IonToolbar>
             </IonHeader>

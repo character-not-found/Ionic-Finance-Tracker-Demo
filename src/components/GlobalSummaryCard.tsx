@@ -82,7 +82,7 @@ const GlobalSummaryCard: React.FC<GlobalSummaryCardProps> = ({
                             y: {
                                 beginAtZero: true,
                                 ticks: {
-                                    color: '#F6D898',
+                                    color: '#c6d8e8',
                                     callback: function(value: string | number) {
                                         return value + ' €';
                                     }
@@ -93,7 +93,7 @@ const GlobalSummaryCard: React.FC<GlobalSummaryCardProps> = ({
                                     display: false,
                                 },
                                 ticks: {
-                                    color: '#F6D898',
+                                    color: '#c6d8e8',
                                 }
                             },
                         },

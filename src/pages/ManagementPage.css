@@ -157,6 +157,7 @@ ion-modal ion-input {
 
 ion-modal ion-item {
     --background: var(--ion-background-color);
+    --border-color: white;
 }
 
 ion-modal ion-label {

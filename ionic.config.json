@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
-  "name": "TukNRoll",
-=======
   "name": "Ionic-Finance-Tracker-App",
->>>>>>> bea023fc536c1e0010f332b239f1e8d3977d656b
   "integrations": {
     "capacitor": {}
   },
