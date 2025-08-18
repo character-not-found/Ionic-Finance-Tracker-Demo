@@ -1,0 +1,8 @@
+.custom-tab-bar {
+  /* This variable removes the border from the top of the tab bar */
+  --border-width: 0;
+
+  /* These variables set the color for the icons and labels */
+  --color: var(--ion-color-primary); /* For unselected tabs */
+  --color-selected: var(--ion-color-primary); /* For selected tab */
+}

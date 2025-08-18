@@ -1,0 +1,200 @@
+/* For information on how to create your own theme, please see:
+http://ionicframework.com/docs/theming/ */
+
+
+
+:root {
+  /** Ionic Color Variables for Light Mode **/
+  --ion-color-primary: #00796b; /* Main background color for header */
+  --ion-color-primary-rgb: 0, 121, 107;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #006a5e;
+  --ion-color-primary-tint: #1a8579;
+
+  --ion-color-secondary: #00e5ff; /* Secondary color, not used yet */
+  --ion-color-secondary-rgb: 0, 229, 255;
+  --ion-color-secondary-contrast: #000000;
+  --ion-color-secondary-contrast-rgb: 0, 0, 0;
+  --ion-color-secondary-shade: #00c9e0;
+  --ion-color-secondary-tint: #1ae7ff;
+
+  --ion-color-tertiary: #b2ebf2; /* Lighter tertiary */
+  --ion-color-tertiary-rgb: 178, 235, 242;
+  --ion-color-tertiary-contrast: #000000;
+  --ion-color-tertiary-contrast-rgb: 0, 0, 0;
+  --ion-color-tertiary-shade: #9ec5c8;
+  --ion-color-tertiary-tint: #badedb;
+
+  --ion-color-success: #00796b; /* Login Card Title color */
+  --ion-color-success-rgb: 0, 121, 107;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #006a5e;
+  --ion-color-success-tint: #1a8579;
+
+  /** Background and Text Colors **/
+  --ion-color-step-50: #f2f2f2;
+  --ion-color-step-100: #e6e6e6;
+  --ion-color-step-150: #d9d9d9;
+  --ion-color-step-200: #cccccc;
+  --ion-color-step-250: #bfbfbf;
+  --ion-color-step-300: #b3b3b3;
+  --ion-color-step-350: #a6a6a6;
+  --ion-color-step-400: #999999;
+  --ion-color-step-450: #8c8c8c;
+  --ion-color-step-500: #808080;
+  --ion-color-step-550: #737373;
+  --ion-color-step-600: #666666;
+  --ion-color-step-650: #595959;
+  --ion-color-step-700: #4d4d4d;
+  --ion-color-step-750: #404040;
+  --ion-color-step-800: #333333;
+  --ion-color-step-850: #262626;
+  --ion-color-step-900: #191919;
+  --ion-color-step-950: #0d0d0d;
+
+  --ion-background-color: #ffffff;
+  --ion-background-color-rgb: 255, 255, 255;
+
+  --ion-text-color: #000000;
+  --ion-text-color-rgb: 0, 0, 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root.md,
+  :root.ios {
+	--ion-color-primary: #809C7E;
+	--ion-color-primary-rgb: 128,156,126;
+	--ion-color-primary-contrast: #ffffff;
+	--ion-color-primary-contrast-rgb: 255,255,255;
+	--ion-color-primary-shade: #71896f;
+	--ion-color-primary-tint: #8da68b;
+
+	--ion-color-secondary: #F6D898;
+	--ion-color-secondary-rgb: 246,216,152;
+	--ion-color-secondary-contrast: #000000;
+	--ion-color-secondary-contrast-rgb: 0,0,0;
+	--ion-color-secondary-shade: #d8be86;
+	--ion-color-secondary-tint: #f7dca2;
+
+	--ion-color-tertiary: #2d3748;
+	--ion-color-tertiary-rgb: 45,55,72;
+	--ion-color-tertiary-contrast: #ffffff;
+	--ion-color-tertiary-contrast-rgb: 255,255,255;
+	--ion-color-tertiary-shade: #28303f;
+	--ion-color-tertiary-tint: #424b5a;
+
+	--ion-color-success: #2dd55b;
+	--ion-color-success-rgb: 45,213,91;
+	--ion-color-success-contrast: #000000;
+	--ion-color-success-contrast-rgb: 0,0,0;
+	--ion-color-success-shade: #28bb50;
+	--ion-color-success-tint: #42d96b;
+
+	--ion-color-warning: #ffc409;
+	--ion-color-warning-rgb: 255,196,9;
+	--ion-color-warning-contrast: #000000;
+	--ion-color-warning-contrast-rgb: 0,0,0;
+	--ion-color-warning-shade: #e0ac08;
+	--ion-color-warning-tint: #ffca22;
+
+	--ion-color-danger: #c5000f;
+	--ion-color-danger-rgb: 197,0,15;
+	--ion-color-danger-contrast: #ffffff;
+	--ion-color-danger-contrast-rgb: 255,255,255;
+	--ion-color-danger-shade: #ad000d;
+	--ion-color-danger-tint: #cb1a27;
+
+	--ion-color-light: #f6f8fc;
+	--ion-color-light-rgb: 246,248,252;
+	--ion-color-light-contrast: #000000;
+	--ion-color-light-contrast-rgb: 0,0,0;
+	--ion-color-light-shade: #d8dade;
+	--ion-color-light-tint: #f7f9fc;
+
+	--ion-color-medium: #5f5f5f;
+	--ion-color-medium-rgb: 95,95,95;
+	--ion-color-medium-contrast: #ffffff;
+	--ion-color-medium-contrast-rgb: 255,255,255;
+	--ion-color-medium-shade: #545454;
+	--ion-color-medium-tint: #6f6f6f;
+
+	--ion-color-dark: #2f2f2f;
+	--ion-color-dark-rgb: 47,47,47;
+	--ion-color-dark-contrast: #ffffff;
+	--ion-color-dark-contrast-rgb: 255,255,255;
+	--ion-color-dark-shade: #292929;
+	--ion-color-dark-tint: #444444;
+
+	--ion-background-color: #1a202c;
+	--ion-background-color-rgb: 26,32,44;
+
+	--ion-text-color: #CBD5E0;
+	--ion-text-color-rgb: 203,213,224;
+
+	--ion-text-color-step-50: #c2ccd7;
+	--ion-text-color-step-100: #b9c3ce;
+	--ion-text-color-step-150: #b0bac5;
+	--ion-text-color-step-200: #a8b1bc;
+	--ion-text-color-step-250: #9fa8b3;
+	--ion-text-color-step-300: #969faa;
+	--ion-text-color-step-350: #8d96a1;
+	--ion-text-color-step-400: #848d98;
+	--ion-text-color-step-450: #7b848f;
+	--ion-text-color-step-500: #737b86;
+	--ion-text-color-step-550: #6a717d;
+	--ion-text-color-step-600: #616874;
+	--ion-text-color-step-650: #585f6b;
+	--ion-text-color-step-700: #4f5662;
+	--ion-text-color-step-750: #464d59;
+	--ion-text-color-step-800: #3d4450;
+	--ion-text-color-step-850: #353b47;
+	--ion-text-color-step-900: #2c323e;
+	--ion-text-color-step-950: #232935;
+
+	--ion-background-color-step-50: #232935;
+	--ion-background-color-step-100: #2c323e;
+	--ion-background-color-step-150: #353b47;
+	--ion-background-color-step-200: #3d4450;
+	--ion-background-color-step-250: #464d59;
+	--ion-background-color-step-300: #4f5662;
+	--ion-background-color-step-350: #585f6b;
+	--ion-background-color-step-400: #616874;
+	--ion-background-color-step-450: #6a717d;
+	--ion-background-color-step-500: #737b86;
+	--ion-background-color-step-550: #7b848f;
+	--ion-background-color-step-600: #848d98;
+	--ion-background-color-step-650: #8d96a1;
+	--ion-background-color-step-700: #969faa;
+	--ion-background-color-step-750: #9fa8b3;
+	--ion-background-color-step-800: #a8b1bc;
+	--ion-background-color-step-850: #b0bac5;
+	--ion-background-color-step-900: #b9c3ce;
+	--ion-background-color-step-950: #c2ccd7;
+
+    --ion-toolbar-background: #1F2937;
+  }
+}
+
+ion-content > :first-child {
+    margin-top: 30px; /* Adjust this value to get the exact distance you want */
+}
+
+ion-tab-bar {
+	--color: #C3DDDE;
+	--background: var(--ion-color-tertiary);
+	--border: 0px;
+	--color-selected: var(--ion-color-secondary);
+}
+
+ion-modal#edit-modal {
+  --height: 75%;
+  --border-radius: 16px;
+  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+ion-modal#edit-modal::part(backdrop) {
+  background: rgba(209, 213, 219);
+  opacity: 1;
+}
