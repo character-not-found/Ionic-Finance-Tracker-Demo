@@ -18,7 +18,7 @@ const getApiBaseUrl = () => {
   }
 };
 
-const API_BASE_URL = getApiBaseUrl();
+const API_BASE_URL = "https://demotuk.duckdns.org";
 
 interface UserCredentials {
   username: string;
@@ -121,15 +121,12 @@ const apiService = {
       const response = await fetch(`${API_BASE_URL}/login/token`, {
         method: 'POST',
         headers: {
-          // This content type is essential for OAuth2PasswordRequestForm
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: formData,
       });
 
       if (response.ok) {
-        const { access_token } = await response.json();
-        localStorage.setItem('accessToken', access_token);
         return true;
       } else {
         const errorData = await response.json();
@@ -150,7 +147,7 @@ const apiService = {
   fetchDashboardSummary: async (year: number, month: number): Promise<DashboardSummary> => {
     try {
       const headers = {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        credentials: 'include',
         'Content-Type': 'application/json',
       };
       
@@ -194,6 +191,7 @@ const apiService = {
 
     const headers = {
         'Content-Type': 'application/json',
+        credentials: 'include',
     };
 
     const response = await fetch(`${API_BASE_URL}/summary/income-sources?year=${safeYear}&month=${safeMonth}`, { headers });
@@ -221,7 +219,7 @@ const apiService = {
     const safeYear = year || new Date().getFullYear();
     const safeMonth = month || new Date().getMonth() + 1;
     const headers = {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        credentials: 'include',
         'Content-Type': 'application/json',
     };
 
@@ -257,6 +255,7 @@ const apiService = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          credentials: 'include',
         },
         body: JSON.stringify(incomeData),
       });
@@ -284,6 +283,7 @@ const apiService = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          credentials: 'include',
         },
         body: JSON.stringify(expenseData),
       });
@@ -311,6 +311,7 @@ const apiService = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          credentials: 'include',          
         },
         body: JSON.stringify(costData),
       });
@@ -329,7 +330,13 @@ const apiService = {
   
   fetchGlobalSummary: async (): Promise<GlobalSummary | null> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/summary/global`);
+      const response = await fetch(`${API_BASE_URL}/summary/global`, {
+        headers: {
+          "Content-Type": 'application/json',
+          credentials: 'include',
+        }
+      });
+      
       if (!response.ok) {
         throw new Error(`API call failed with status: ${response.status}`);
       }
@@ -348,7 +355,13 @@ const apiService = {
 
   getLatestIncomeRecords: async (): Promise<(IncomeData & { doc_id: number })[]> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/income/all-individual`);
+      const response = await fetch(`${API_BASE_URL}/income/all-individual`, {
+        headers: {
+          "Content-Type": 'application/json',
+          credentials: 'include',
+        }
+      });
+      
       if (!response.ok) {
         throw new Error(`API call failed with status: ${response.status}`);
       }
@@ -373,7 +386,13 @@ const apiService = {
 
   getLatestDailyExpenses: async (): Promise<(DailyExpenseData & { doc_id: number })[]> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/daily-expenses/`);
+      const response = await fetch(`${API_BASE_URL}/daily-expenses/`, {
+        headers: {
+          "Content-Type": 'application/json',
+          credentials: 'include',
+        }
+      });
+      
       if (!response.ok) {
         throw new Error(`API call failed with status: ${response.status}`);
       }
@@ -398,7 +417,13 @@ const apiService = {
 
   getLatestFixedCosts: async (): Promise<(FixedCostData & { doc_id: number })[]> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/fixed-costs/`);
+      const response = await fetch(`${API_BASE_URL}/fixed-costs/`, {
+        headers: {
+          "Content-Type": 'application/json',
+          credentials: 'include',
+        }
+      });
+      
       if (!response.ok) {
         throw new Error(`API call failed with status: ${response.status}`);
       }
@@ -434,10 +459,9 @@ const apiService = {
     }
 
     let endpoint = '';
-    const token = localStorage.getItem('token');
     const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
+      "Content-Type": 'application/json',
+      credentials: 'include',
     };
 
     let payload;
@@ -498,9 +522,9 @@ const apiService = {
     }
 
     let endpoint = '';
-    const token = localStorage.getItem('token');
     const headers = {
-      'Authorization': `Bearer ${token}`,
+      "Content-Type": 'application/json',
+      credentials: 'include',
     };
 
     switch (record.dataType) {
