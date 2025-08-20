@@ -20,7 +20,7 @@ const getApiBaseUrl = () => {
   }
 };
 
-const API_BASE_URL = getApiBaseUrl();
+const API_BASE_URL = "https://demotuk.duckdns.org";
 
 interface UserCredentials {
   username: string;

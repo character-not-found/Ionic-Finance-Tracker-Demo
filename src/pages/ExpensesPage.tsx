@@ -156,12 +156,12 @@ const ExpensesPage: React.FC = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent fullscreen className={`expenses-content ${isKeyboardOpen ? (
-                focusedFieldType === 'number' ? 
-                    'keyboard-up-numeric' : 
+                    focusedFieldType === 'number' ? 
+                    `keyboard-up-numeric ${expenseType === 'daily' ? 'keyboard-up-daily' : 'keyboard-up-fixed'}` : 
                     (expenseType === 'daily' ? 'keyboard-up-daily' : 'keyboard-up-fixed')
                 ) : ''}`}
             >
-                <IonGrid>
+                <IonGrid className='expenses-grid'>
                     <IonRow className="ion-justify-content-center">
                         <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
                             <IonCard className="expenses-card align-center">

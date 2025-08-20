@@ -19,6 +19,10 @@ ion-header {
     height: auto;
 }
 
+ion-content ion-grid.expenses-grid {
+    margin-top: 20px;
+}
+
 .expenses-card {
     background-color: var(--ion-color-tertiary);
     border-radius: 20px;
@@ -130,13 +134,17 @@ ion-content {
 }
 
 .expenses-content.keyboard-up-numeric {
-    transform: translateY(-30%);
+    transform: translateY(-10%);
 }
 
 .expenses-content.keyboard-up-daily {
-    transform: translateY(-35%);
+    transform: translateY(-10%);
+}
+
+.expenses-content.keyboard-up-fixed.keyboard-up-numeric {
+    transform: translateY(-40%);
 }
 
 .expenses-content.keyboard-up-fixed {
-    transform: translateY(-40%);
+    transform: translateY(-40%);    
 }

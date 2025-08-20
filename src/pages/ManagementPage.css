@@ -25,6 +25,10 @@ ion-toolbar {
     height: auto;
 }
 
+ion-content ion-grid.management-grid {
+    margin-top: 20px;
+}
+
 ion-toolbar .close-button {
     padding-top: 60px;
     background-color: var(--ion-background-color);
@@ -177,11 +181,11 @@ ion-modal ion-input {
 }
 
 .management-content.keyboard-up-alphanumeric {
-    transform: translateY(-22%);
+    transform: translateY(-19%);
 }
 
 .management-content.keyboard-up-numeric {
-    transform: translateY(-16%);
+    transform: translateY(-19%);
 }
 
 .alert-message-pre-line {

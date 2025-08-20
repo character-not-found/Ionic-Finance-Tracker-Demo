@@ -239,7 +239,7 @@ const ManagementPage: React.FC = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent fullscreen>
-                <IonGrid>
+                <IonGrid className='management-grid'>
                     <IonRow className="ion-justify-content-center">
                         <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
                             <IonCard className="management-card align-center">

@@ -81,7 +81,7 @@ const IncomePage: React.FC = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent fullscreen className={`income-content ${isKeyboardOpen ? 'keyboard-up' : ''}`}>
-                <IonGrid>
+                <IonGrid className='income-grid'>
                     <IonRow className="ion-justify-content-center">
                         <IonCol size="12" size-md="8" size-lg="6" sizeXl="4">
                             <IonCard className="income-card align-center">

@@ -19,6 +19,10 @@ ion-header {
     height: auto;
 }
 
+ion-content ion-grid.income-grid {
+    margin-top: 20px;
+}
+
 .income-card {
     background-color: var(--ion-color-tertiary);
     border-radius: 20px;
@@ -64,6 +68,10 @@ ion-list, .list-md, .list-ios {
     background: var(--ion-color-tertiary);
 }
 
+.list-md {
+    background: var(--ion-color-tertiary) !important;
+}
+
 ion-label {
     color: var(--ion-color-light);
     font-weight: 500;
@@ -92,5 +100,5 @@ ion-content {
 }
 
 .income-content.keyboard-up {
-    transform: translateY(-50%);
+    transform: translateY(-22%);
 }
