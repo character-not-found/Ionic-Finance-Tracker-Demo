@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.demotuk-ionic',
+  appId: 'com.demotuk.ionic',
   appName: 'Demo Finance Tracker App',
   webDir: 'dist',
   plugins:{
@@ -11,7 +11,10 @@ const config: CapacitorConfig = {
     StatusBar: {
       style: 'DARK',
       overlayWebView: false
-    }
+    },
+    CapacitorHttp: {
+      enabled: true,
+    },
   }
 };
 

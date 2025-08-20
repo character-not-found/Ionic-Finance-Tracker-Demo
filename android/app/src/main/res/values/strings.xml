@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">Demo Finance Tracker App</string>
     <string name="title_activity_main">Demo Finance Tracker App</string>
-    <string name="package_name">com.demotuk-ionic</string>
-    <string name="custom_url_scheme">com.demotuk-ionic</string>
+    <string name="package_name">com.demotuk.ionic</string>
+    <string name="custom_url_scheme">com.demotuk.ionic</string>
 </resources>

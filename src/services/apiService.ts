@@ -3,6 +3,8 @@
  * @description A service for making API calls to the FastAPI backend.
  */
 
+import { CapacitorHttp } from "@capacitor/core";
+import { setToken, getToken } from "./authService";
 import { ManagementRecord } from "../pages/ManagementPage";
 
 const getApiBaseUrl = () => {
@@ -18,7 +20,7 @@ const getApiBaseUrl = () => {
   }
 };
 
-const API_BASE_URL = "https://demotuk.duckdns.org";
+const API_BASE_URL = getApiBaseUrl();
 
 interface UserCredentials {
   username: string;
@@ -113,29 +115,29 @@ const apiService = {
    */
   loginUser: async (user: UserCredentials): Promise<boolean> => {
     try {
-      // Create a URLSearchParams object to format the data as x-www-form-urlencoded
       const formData = new URLSearchParams();
       formData.append('username', user.username);
       formData.append('password', user.password);
 
-      const response = await fetch(`${API_BASE_URL}/login/token`, {
-        method: 'POST',
+      const response = await CapacitorHttp.post({
+        url: `${API_BASE_URL}/login/token`,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: formData,
+        data: formData.toString(),
       });
 
-      if (response.ok) {
-        return true;
+      if (response.status === 200 && response.data && response.data.access_token) {
+          console.log('Login successful. Saving token.');
+          await setToken(response.data.access_token);
+          return true;
       } else {
-        const errorData = await response.json();
-        console.error('Login failed with status:', response.status, 'Error:', errorData);
-        return false;
+          console.error('Login failed with status:', response.status, 'Error:', response.data);
+          return false;
       }
     } catch (error) {
-      console.error('Failed to connect to the login API:', error);
-      return false;
+        console.error('Failed to connect to the login API:', error);
+        return false;
     }
   },
 
@@ -145,25 +147,46 @@ const apiService = {
    * @returns A promise that resolves to a DashboardSummary object.
    */
   fetchDashboardSummary: async (year: number, month: number): Promise<DashboardSummary> => {
-    try {
-      const headers = {
-        credentials: 'include',
-        'Content-Type': 'application/json',
-      };
-      
+    try {   
       const today = new Date();
       const safeMonth = month || today.getMonth() + 1; 
       const safeYear = year || today.getFullYear();
 
-      // Create start and end dates for the current month in YYYY-MM-DD format
+      const token = await getToken();
+      if (!token) {
+          throw new Error('No authentication token available.');
+      };
+
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, 
+      };
+
       const startDate = new Date(safeYear, safeMonth - 1, 1).toISOString().split('T')[0];
       const endDate = new Date(safeYear, safeMonth, 0).toISOString().split('T')[0];
 
-      const monthlySummaryPromise = fetch(`${API_BASE_URL}/summary/monthly?year=${safeYear}&month=${safeMonth}`, { headers }).then(res => res.json());
-      const dailyIncomeAveragePromise = fetch(`${API_BASE_URL}/summary/daily-income-average?start_date=${startDate}&end_date=${endDate}`, { headers }).then(res => res.json());
-      const cashOnHandPromise = fetch(`${API_BASE_URL}/summary/cash-on-hand`, { headers }).then(res => res.json());
+      const fetchData = async (url: string) => {
+        const response = await CapacitorHttp.get({ url, headers });
+        if (response.status >= 200 && response.status < 300) {
+          return response.data;
+        } else {
+          throw new Error(`API call to ${url} failed with status: ${response.status} and message: ${JSON.stringify(response.data)}`);
+        }
+      };      
 
-      const [monthlySummary, dailyIncomeAverage, cashOnHand] = await Promise.all([monthlySummaryPromise, dailyIncomeAveragePromise, cashOnHandPromise]);
+      const monthlySummaryPromise = fetchData(`${API_BASE_URL}/summary/monthly?year=${safeYear}&month=${safeMonth}`);
+      const dailyIncomeAveragePromise = fetchData(`${API_BASE_URL}/summary/daily-income-average?start_date=${startDate}&end_date=${endDate}`);
+      const cashOnHandPromise = fetchData(`${API_BASE_URL}/summary/cash-on-hand`);
+
+      const [monthlySummary, dailyIncomeAverage, cashOnHand] = await Promise.all([
+        monthlySummaryPromise,
+        dailyIncomeAveragePromise,
+        cashOnHandPromise,
+      ]);
+
+      if (!monthlySummary || !dailyIncomeAverage || !cashOnHand) {
+          throw new Error('One or more summary data components were missing from the API response.');
+      }
 
       const dashboardSummary: DashboardSummary = {
         netProfitLoss: monthlySummary.net_monthly_profit,
@@ -172,6 +195,8 @@ const apiService = {
         totalMonthlyIncome: monthlySummary.total_monthly_income,
         totalMonthlyExpenses: monthlySummary.total_monthly_expenses,
       };
+
+      console.log('Dashboard summary fetched successfully:', dashboardSummary);
       return dashboardSummary;
     } catch (error) {
       console.error('Failed to fetch dashboard summary data:', error);
@@ -186,62 +211,88 @@ const apiService = {
   },
 
   fetchMonthlyIncomeByCategory: async (year: number, month: number): Promise<CategoryChartData> => {
-    const safeYear = year || new Date().getFullYear();
-    const safeMonth = month || new Date().getMonth() + 1;;
+    try {
+      const safeYear = year || new Date().getFullYear();
+      const safeMonth = month || new Date().getMonth() + 1;
+      const token = await getToken();
+      if (!token) {
+          throw new Error('No authentication token available.');
+      };
 
-    const headers = {
-        'Content-Type': 'application/json',
-        credentials: 'include',
-    };
+      const headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, 
+      };
 
-    const response = await fetch(`${API_BASE_URL}/summary/income-sources?year=${safeYear}&month=${safeMonth}`, { headers });
+      const response = await CapacitorHttp.get({
+        url: `${API_BASE_URL}/summary/income-sources?year=${safeYear}&month=${safeMonth}`,
+        headers: headers,
+      });
 
-    if (!response.ok) {
-        throw new Error('Failed to fetch income categories summary');
-    }
+      if (response.status === 200 && response.data) {
+        const rawData = await response.data;
 
-    const rawData = await response.json();
+        const labels = Object.keys(rawData);
+        const data = Object.values(rawData) as number[];
 
-    const labels = Object.keys(rawData);
-    const data = Object.values(rawData) as number[];
-
-    return {
-        labels: labels,
-        datasets: [{
+        return {
+          labels: labels,
+          datasets: [{
             data: data,
             backgroundColor: softerGreenHues.slice(0, labels.length),
             hoverBackgroundColor: softerGreenHues.slice(0, labels.length),
-        }]
-    };
+          }]
+        };
+      } else {
+        const errorMessage = `Failed to fetch income category data with status: ${response.status}, message: ${JSON.stringify(response.data)}`;
+        console.error(errorMessage);
+        throw new Error(errorMessage);
+      }
+    } catch (error) {
+      console.error('Network error while fetching income category data:', error);
+      throw error;
+    }
   },
 
   fetchMonthlyExpenseByCategory: async (year: number, month: number): Promise<CategoryChartData> => {
-    const safeYear = year || new Date().getFullYear();
-    const safeMonth = month || new Date().getMonth() + 1;
-    const headers = {
-        credentials: 'include',
-        'Content-Type': 'application/json',
-    };
+    try {    
+      const safeYear = year || new Date().getFullYear();
+      const safeMonth = month || new Date().getMonth() + 1;
+      const token = await getToken();
+      if (!token) {
+          throw new Error('No authentication token available.');
+      };
 
-    const response = await fetch(`${API_BASE_URL}/summary/expense-categories?year=${safeYear}&month=${safeMonth}`, { headers });
+      const response = await CapacitorHttp.get({
+        url: `${API_BASE_URL}/summary/expense-categories?year=${safeYear}&month=${safeMonth}`,
+        headers: {
+          'Authorization': `Bearer ${token}`,        
+        }
+      });
 
-    if (!response.ok) {
-        throw new Error('Failed to fetch expense categories summary');
-    }
+      if (response.status === 200 && response.data) {
+        const rawData = await response.data;
 
-    const rawData = await response.json();
+        const labels = Object.keys(rawData);
+        const data = Object.values(rawData) as number[];
 
-    const labels = Object.keys(rawData);
-    const data = Object.values(rawData) as number[];
-
-    return {
-        labels: labels,
-        datasets: [{
+        return {
+          labels: labels,
+          datasets: [{
             data: data,
             backgroundColor: softerRedHues.slice(0, labels.length),
             hoverBackgroundColor: softerRedHues.slice(0, labels.length),
-        }]
-    };
+          }]
+        };
+      } else {
+        const errorMessage = `Failed to fetch expense category data with status: ${response.status}, message: ${JSON.stringify(response.data)}`;
+        console.error(errorMessage);
+        throw new Error(errorMessage);
+      }
+    } catch (error) {
+      console.error('Network error while fetching expense category data:', error);
+      throw error;
+    }
   },
 
   /**
@@ -249,26 +300,34 @@ const apiService = {
    * @param incomeData The income data object.
    * @returns A promise that resolves to true if registration is successful, false otherwise.
    */
-  registerIncome: async (incomeData: IncomeData): Promise<boolean> => {
+  registerIncome: async (data: IncomeData): Promise<boolean> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/income/`, {
+      const token = await getToken();
+      if (!token) {
+          throw new Error('No authentication token available.');
+      };
+
+      const response = await CapacitorHttp.post({
+        url: `${API_BASE_URL}/income/`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          credentials: 'include',
+          'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(incomeData),
+        data: JSON.stringify(data),
       });
 
-      if (response.ok) {
+      if (response.status >= 200 && response.status < 300 && response.data) {
+        console.log('Income added successfully:', response.data);
         return true;
       } else {
-        console.error('Income registration failed with status:', response.status);
-        return false;
+        const errorMessage = `Failed to add income with status: ${response.status}, message: ${JSON.stringify(response.data)}`;
+        console.error(errorMessage);
+        throw new Error(errorMessage);
       }
     } catch (error) {
-      console.error('Network error during income registration:', error);
-      return false;
+      console.error('Network error while adding income:', error);
+      throw error;
     }
   },
 
@@ -277,26 +336,34 @@ const apiService = {
    * @param expenseData The daily expense data object.
    * @returns A promise that resolves to true if registration is successful, false otherwise.
    */
-  registerDailyExpense: async (expenseData: DailyExpenseData): Promise<boolean> => {
+  registerDailyExpense: async (data: DailyExpenseData): Promise<boolean> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/daily-expenses/`, {
+      const token = await getToken();
+      if (!token) {
+          throw new Error('No authentication token available.');
+      };
+
+      const response = await CapacitorHttp.post({
+        url: `${API_BASE_URL}/daily-expenses/`,         
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          credentials: 'include',
+          'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(expenseData),
+        data: data,
       });
 
-      if (response.ok) {
+      if (response.status >= 200 && response.status < 300 && response.data) {
+        console.log('Daily Expense added successfully:', response.data);
         return true;
       } else {
-        console.error('Daily expense registration failed with status:', response.status);
-        return false;
+        const errorMessage = `Failed to add daily expense with status: ${response.status}, message: ${JSON.stringify(response.data)}`;
+        console.error(errorMessage);
+        throw new Error(errorMessage);
       }
     } catch (error) {
-      console.error('Network error during daily expense registration:', error);
-      return false;
+      console.error('Network error while adding daily expense:', error);
+      throw error;
     }
   },
 
@@ -305,79 +372,106 @@ const apiService = {
    * @param costData The fixed cost data object.
    * @returns A promise that resolves to true if registration is successful, false otherwise.
    */
-  registerFixedCost: async (costData: FixedCostData): Promise<boolean> => {
+  registerFixedCost: async (data: FixedCostData): Promise<boolean> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/fixed-costs/`, {
+      const token = await getToken();
+      if (!token) {
+          throw new Error('No authentication token available.');
+      }
+
+      const response = await CapacitorHttp.post({
+        url: `${API_BASE_URL}/fixed-costs/`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          credentials: 'include',          
+          'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(costData),
+        data: data,
       });
 
-      if (response.ok) {
+      if (response.status >= 200 && response.status < 300 && response.data) {
+        console.log('Fixed Cost added successfully:', response.data);
         return true;
       } else {
-        console.error('Fixed cost registration failed with status:', response.status);
-        return false;
+        const errorMessage = `Failed to add fixed cost with status: ${response.status}, message: ${JSON.stringify(response.data)}`;
+        console.error(errorMessage);
+        throw new Error(errorMessage);
       }
     } catch (error) {
-      console.error('Network error during fixed cost registration:', error);
-      return false;
+      console.error('Network error while adding fixed cost:', error);
+      throw error;
     }
   },
   
   fetchGlobalSummary: async (): Promise<GlobalSummary | null> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/summary/global`, {
+      const token = await getToken();
+      if (!token) {
+          throw new Error('No authentication token available.');
+      }
+
+      const response = await CapacitorHttp.get({
+        url: `${API_BASE_URL}/summary/global`,
         headers: {
-          "Content-Type": 'application/json',
-          credentials: 'include',
+          'Authorization': `Bearer ${token}`,
         }
       });
-      
-      if (!response.ok) {
-        throw new Error(`API call failed with status: ${response.status}`);
+
+      if (response.status === 200 && response.data && typeof response.data === 'object') {
+        console.log("Global summary fetched successfully:", response.data);
+        const data: GlobalSummary = await response.data;
+        return {
+          ...data,
+          incomeColors: softerGreenHues,
+          expenseColors: softerRedHues
+        }
+      } else {
+        const errorMessage = `API call failed with status: ${response.status}, message: ${JSON.stringify(response.data)}`;
+        console.error(errorMessage);
+        throw new Error(errorMessage);
       }
-      const data: GlobalSummary = await response.json();
-      console.log("Global summary fetched successfully:", data);
-      return {
-        ...data,
-        incomeColors: softerGreenHues,
-        expenseColors: softerRedHues
-      };
     } catch (error) {
       console.error('Network error while fetching global summary:', error);
-      return null;
+      throw error;
     }
   },
 
   getLatestIncomeRecords: async (): Promise<(IncomeData & { doc_id: number })[]> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/income/all-individual`, {
+      const token = await getToken();
+      if (!token) {
+          throw new Error('No authentication token available.');
+      }
+
+      const response = await CapacitorHttp.get({
+        url: `${API_BASE_URL}/income/all-individual`,
         headers: {
-          "Content-Type": 'application/json',
-          credentials: 'include',
+          'Authorization': `Bearer ${token}`,
         }
       });
-      
-      if (!response.ok) {
+
+      if (response.status >= 200 && response.status < 300) {
+        if (response.data && Array.isArray(response.data)) {
+            console.log("All individual income records fetched successfully:", response.data);
+
+            const sortedData = response.data.sort((a, b) => {
+              const dateComparison = new Date(b.income_date).getTime() - new Date(a.income_date).getTime();
+              if (dateComparison !== 0) {
+                  return dateComparison;
+              }
+            return b.doc_id - a.doc_id;
+          });
+
+          const slicedData = sortedData.slice(0, 20);
+          console.log("Sorted income records:", slicedData);
+          return slicedData;
+        } else {
+          console.error('API response for income records was empty or malformed.');
+          return [];
+        }
+      } else {
         throw new Error(`API call failed with status: ${response.status}`);
       }
-      const data: (IncomeData & { doc_id: number })[] = await response.json();
-      console.log("All individual income records fetched successfully:", data);
-
-      const sortedData = data.sort((a, b) => {
-          const dateComparison = new Date(b.income_date).getTime() - new Date(a.income_date).getTime();
-          if (dateComparison !== 0) {
-              return dateComparison;
-          }
-          return b.doc_id - a.doc_id;
-      });
-      const slicedData = sortedData.slice(0, 20);
-      console.log("Sorted income records:", slicedData);
-      return slicedData;
     } catch (error) {
       console.error('Network error while fetching income records:', error);
       return [];
@@ -386,29 +480,40 @@ const apiService = {
 
   getLatestDailyExpenses: async (): Promise<(DailyExpenseData & { doc_id: number })[]> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/daily-expenses/`, {
+      const token = await getToken();
+      if (!token) {
+          throw new Error('No authentication token available.');
+      }
+
+      const response = await CapacitorHttp.get({
+        url: `${API_BASE_URL}/daily-expenses/`,
         headers: {
-          "Content-Type": 'application/json',
-          credentials: 'include',
-        }
+          'Authorization': `Bearer ${token}`,
+        }        
       });
-      
-      if (!response.ok) {
+
+      if (response.status >= 200 && response.status < 300) {
+        if (response.data && Array.isArray(response.data)) {
+          console.log("All daily expense records fetched successfully:", response.data);
+
+          const sortedData = response.data.sort((a, b) => {
+            const dateComparison = new Date(b.cost_date).getTime() - new Date(a.cost_date).getTime();
+            if (dateComparison !== 0) {
+              return dateComparison;
+            }
+            return b.doc_id - a.doc_id;
+          });
+
+          const slicedData = sortedData.slice(0, 20);
+          console.log("Sorted daily expense records:", slicedData);
+          return slicedData;
+        } else {
+          console.error('API response for daily expenses was empty or malformed.');
+          return [];
+        }
+      } else {
         throw new Error(`API call failed with status: ${response.status}`);
       }
-      const data: (DailyExpenseData & { doc_id: number })[] = await response.json();
-      console.log("All daily expense records fetched successfully:", data);
-
-      const sortedData = data.sort((a, b) => {
-        const dateComparison = new Date(b.cost_date).getTime() - new Date(a.cost_date).getTime();
-        if (dateComparison !== 0) {
-          return dateComparison;
-        }
-        return b.doc_id - a.doc_id;
-      });
-      const slicedData = sortedData.slice(0, 20);
-      console.log("Sorted daily expense records:", slicedData);
-      return slicedData;
     } catch (error) {
       console.error('Network error while fetching daily expenses:', error);
       return [];
@@ -417,29 +522,40 @@ const apiService = {
 
   getLatestFixedCosts: async (): Promise<(FixedCostData & { doc_id: number })[]> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/fixed-costs/`, {
+      const token = await getToken();
+      if (!token) {
+          throw new Error('No authentication token available.');
+      }
+
+      const response = await CapacitorHttp.get({
+        url: `${API_BASE_URL}/fixed-costs/`,
         headers: {
-          "Content-Type": 'application/json',
-          credentials: 'include',
-        }
+          'Authorization': `Bearer ${token}`,
+        }  
       });
-      
-      if (!response.ok) {
+
+      if (response.status >= 200 && response.status < 300) {
+        if (response.data && Array.isArray(response.data)) {
+          console.log("All fixed cost records fetched successfully:", response.data);
+
+          const sortedData = response.data.sort((a, b) => {
+            const dateComparison = new Date(b.cost_date).getTime() - new Date(a.cost_date).getTime();
+            if (dateComparison !== 0) {
+              return dateComparison;
+            }
+            return b.doc_id - a.doc_id;
+          });
+
+          const slicedData = sortedData.slice(0, 20);
+          console.log("Sorted fixed cost records:", slicedData);
+          return slicedData;
+        } else {
+          console.error('API response for fixed costs was empty or malformed.');
+          return [];
+        }
+      } else {
         throw new Error(`API call failed with status: ${response.status}`);
       }
-      const data: (FixedCostData & { doc_id: number })[] = await response.json();
-      console.log("All fixed cost records fetched successfully:", data);
-
-      const sortedData = data.sort((a, b) => {
-          const dateComparison = new Date(b.cost_date).getTime() - new Date(a.cost_date).getTime();
-          if (dateComparison !== 0) {
-              return dateComparison;
-          }
-          return b.doc_id - a.doc_id;
-      });
-      const slicedData = sortedData.slice(0, 20);
-      console.log("Sorted fixed cost records:", slicedData);
-      return slicedData;
     } catch (error) {
       console.error('Network error while fetching fixed costs:', error);
       return [];
@@ -458,10 +574,15 @@ const apiService = {
       return false;
     }
 
+    const token = await getToken();
+      if (!token) {
+          throw new Error('No authentication token available.');
+    }
+
     let endpoint = '';
     const headers = {
-      "Content-Type": 'application/json',
-      credentials: 'include',
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
     };
 
     let payload;
@@ -489,17 +610,18 @@ const apiService = {
     }
 
     try {
-      const response = await fetch(endpoint, {
+      const response = await CapacitorHttp.put({
+        url: endpoint,
         method: 'PUT',
         headers: headers,
-        body: JSON.stringify(payload),
+        data: payload,
       });
 
-      if (response.ok) {
+      if (response.status >= 200 && response.status < 300) {
         console.log(`Successfully updated ${record.dataType} record with doc_id: ${record.doc_id}`);
         return true;
       } else {
-        const errorData = await response.json();
+        const errorData = response.data;
         console.error(`Failed to update ${record.dataType} record with status: ${response.status}`, errorData);
         return false;
       }
@@ -507,7 +629,7 @@ const apiService = {
       console.error('Network error during record update:', error);
       return false;
     }
-  },  
+  },
   
 /**
  * Deletes an existing record for a given data type.
@@ -521,10 +643,15 @@ const apiService = {
       return false;
     }
 
+    const token = await getToken();
+      if (!token) {
+          throw new Error('No authentication token available.');
+    }
+
     let endpoint = '';
     const headers = {
-      "Content-Type": 'application/json',
-      credentials: 'include',
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
     };
 
     switch (record.dataType) {
@@ -543,22 +670,23 @@ const apiService = {
     }
 
     try {
-      const response = await fetch(endpoint, {
+      const response = await CapacitorHttp.delete({
+        url: endpoint,
         method: 'DELETE',
         headers: headers,
       });
 
-      if (response.ok) {
-        console.log(`Successfully deleted ${record.dataType} record with doc_id: ${record.doc_id}`);
-        return true;
+      if (response.status >= 200 && response.status < 300) {
+          console.log(`Successfully deleted ${record.dataType} record with doc_id: ${record.doc_id}`);
+          return true;
       } else {
-        const errorData = await response.json();
-        console.error(`Failed to delete ${record.dataType} record with status: ${response.status}`, errorData);
-        return false;
+          const errorData = response.data;
+          console.error(`Failed to delete ${record.dataType} record with status: ${response.status}`, errorData);
+          return false;
       }
     } catch (error) {
-      console.error('Network error during record deletion:', error);
-      return false;
+        console.error('Network error during record deletion:', error);
+        return false;
     }
   },
 

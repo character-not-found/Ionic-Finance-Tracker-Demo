@@ -139,7 +139,7 @@ const HomePage: React.FC = () => {
                 <IonGrid className='home-grid'>
                     <IonRow className='ion-justify-content-center'>
                         <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4" className='swiper-container'>
-                            <Swiper modules={[Scrollbar]} scrollbar={{ draggable: true }} initialSlide={1}>
+                            <Swiper modules={[Scrollbar]} scrollbar={{ draggable: true }} initialSlide={1} spaceBetween={50}>
                                 <SwiperSlide>
                                     <GlobalSummaryCard
                                         loading={loading}

@@ -1,5 +1,5 @@
 ion-toolbar .logo-container {
-    padding-top: 70px;
+    padding-top: 50px;
     background-color: var(--ion-background-color);
 }
 
@@ -11,7 +11,7 @@ ion-header {
 .logo-container {
     text-align: center;
     padding-top: 10px;
-    padding-bottom: 10px;
+    padding-bottom: 0px;
 }
 
 .logo-container img {
@@ -23,7 +23,7 @@ ion-header {
     background-color: var(--ion-color-tertiary);
     border-radius: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 90%;
+    width: 95%;
     margin: auto;
     height: 100%;
 }
