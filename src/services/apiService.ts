@@ -4,7 +4,6 @@
  */
 
 import { CapacitorHttp } from "@capacitor/core";
-import { setToken, getToken } from "./authService";
 import { ManagementRecord } from "../pages/ManagementPage";
 
 const getApiBaseUrl = () => {
@@ -20,7 +19,8 @@ const getApiBaseUrl = () => {
   }
 };
 
-const API_BASE_URL = "https://demotuk.duckdns.org";
+//const API_BASE_URL = "https://demotuk.duckdns.org";
+const API_BASE_URL = getApiBaseUrl();
 
 interface UserCredentials {
   username: string;
@@ -128,8 +128,7 @@ const apiService = {
       });
 
       if (response.status === 200 && response.data && response.data.access_token) {
-          console.log('Login successful. Saving token.');
-          await setToken(response.data.access_token);
+          console.log('Login successful.');
           return true;
       } else {
           console.error('Login failed with status:', response.status, 'Error:', response.data);
@@ -152,14 +151,8 @@ const apiService = {
       const safeMonth = month || today.getMonth() + 1; 
       const safeYear = year || today.getFullYear();
 
-      const token = await getToken();
-      if (!token) {
-          throw new Error('No authentication token available.');
-      };
-
       const headers = {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`, 
       };
 
       const startDate = new Date(safeYear, safeMonth - 1, 1).toISOString().split('T')[0];
@@ -214,14 +207,9 @@ const apiService = {
     try {
       const safeYear = year || new Date().getFullYear();
       const safeMonth = month || new Date().getMonth() + 1;
-      const token = await getToken();
-      if (!token) {
-          throw new Error('No authentication token available.');
-      };
 
       const headers = {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, 
       };
 
       const response = await CapacitorHttp.get({
@@ -258,16 +246,10 @@ const apiService = {
     try {    
       const safeYear = year || new Date().getFullYear();
       const safeMonth = month || new Date().getMonth() + 1;
-      const token = await getToken();
-      if (!token) {
-          throw new Error('No authentication token available.');
-      };
 
       const response = await CapacitorHttp.get({
         url: `${API_BASE_URL}/summary/expense-categories?year=${safeYear}&month=${safeMonth}`,
-        headers: {
-          'Authorization': `Bearer ${token}`,        
-        }
+        headers: {}
       });
 
       if (response.status === 200 && response.data) {
@@ -302,17 +284,12 @@ const apiService = {
    */
   registerIncome: async (data: IncomeData): Promise<boolean> => {
     try {
-      const token = await getToken();
-      if (!token) {
-          throw new Error('No authentication token available.');
-      };
 
       const response = await CapacitorHttp.post({
         url: `${API_BASE_URL}/income/`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
         },
         data: JSON.stringify(data),
       });
@@ -338,17 +315,12 @@ const apiService = {
    */
   registerDailyExpense: async (data: DailyExpenseData): Promise<boolean> => {
     try {
-      const token = await getToken();
-      if (!token) {
-          throw new Error('No authentication token available.');
-      };
 
       const response = await CapacitorHttp.post({
         url: `${API_BASE_URL}/daily-expenses/`,         
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
         },
         data: data,
       });
@@ -374,17 +346,12 @@ const apiService = {
    */
   registerFixedCost: async (data: FixedCostData): Promise<boolean> => {
     try {
-      const token = await getToken();
-      if (!token) {
-          throw new Error('No authentication token available.');
-      }
 
       const response = await CapacitorHttp.post({
         url: `${API_BASE_URL}/fixed-costs/`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
         },
         data: data,
       });
@@ -405,16 +372,10 @@ const apiService = {
   
   fetchGlobalSummary: async (): Promise<GlobalSummary | null> => {
     try {
-      const token = await getToken();
-      if (!token) {
-          throw new Error('No authentication token available.');
-      }
 
       const response = await CapacitorHttp.get({
         url: `${API_BASE_URL}/summary/global`,
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        }
+        headers: {}
       });
 
       if (response.status === 200 && response.data && typeof response.data === 'object') {
@@ -438,16 +399,10 @@ const apiService = {
 
   getLatestIncomeRecords: async (): Promise<(IncomeData & { doc_id: number })[]> => {
     try {
-      const token = await getToken();
-      if (!token) {
-          throw new Error('No authentication token available.');
-      }
 
       const response = await CapacitorHttp.get({
         url: `${API_BASE_URL}/income/all-individual`,
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        }
+        headers: {}
       });
 
       if (response.status >= 200 && response.status < 300) {
@@ -480,16 +435,10 @@ const apiService = {
 
   getLatestDailyExpenses: async (): Promise<(DailyExpenseData & { doc_id: number })[]> => {
     try {
-      const token = await getToken();
-      if (!token) {
-          throw new Error('No authentication token available.');
-      }
 
       const response = await CapacitorHttp.get({
         url: `${API_BASE_URL}/daily-expenses/`,
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        }        
+        headers: {}        
       });
 
       if (response.status >= 200 && response.status < 300) {
@@ -522,16 +471,9 @@ const apiService = {
 
   getLatestFixedCosts: async (): Promise<(FixedCostData & { doc_id: number })[]> => {
     try {
-      const token = await getToken();
-      if (!token) {
-          throw new Error('No authentication token available.');
-      }
-
       const response = await CapacitorHttp.get({
         url: `${API_BASE_URL}/fixed-costs/`,
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        }  
+        headers: {}  
       });
 
       if (response.status >= 200 && response.status < 300) {
@@ -574,15 +516,9 @@ const apiService = {
       return false;
     }
 
-    const token = await getToken();
-      if (!token) {
-          throw new Error('No authentication token available.');
-    }
-
     let endpoint = '';
     const headers = {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
     };
 
     let payload;
@@ -643,15 +579,9 @@ const apiService = {
       return false;
     }
 
-    const token = await getToken();
-      if (!token) {
-          throw new Error('No authentication token available.');
-    }
-
     let endpoint = '';
     const headers = {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
     };
 
     switch (record.dataType) {
@@ -687,6 +617,26 @@ const apiService = {
     } catch (error) {
         console.error('Network error during record deletion:', error);
         return false;
+    }
+  },
+
+  checkSession: async (): Promise<boolean> => {
+    try {
+      console.log("Starting session check...");
+      const response = await CapacitorHttp.get({
+        url: `${API_BASE_URL}/session_check`,
+      });
+
+      if (response.status === 200 && response.data && response.data.authenticated) {
+        console.log("Session check successful. User is authenticated.");
+        return true;
+      } else {
+        console.log("Session check failed. User is not authenticated.");
+        return false;
+      }
+    } catch (error: any) {
+      console.error("Session check failed with error:", error);
+      return false;
     }
   },
 

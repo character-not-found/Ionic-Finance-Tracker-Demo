@@ -18,16 +18,19 @@ import { Keyboard } from '@capacitor/keyboard';
 import { type PluginListenerHandle } from '@capacitor/core';
 import './LoginPage.css';
 import apiService from '../services/apiService';
+import { useHistory } from 'react-router';
 
 interface LoginPageProps {
-  onLoginSuccess: (username: string) => void;
+  onLoginSuccess: () => void;
 }
 
 const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
     const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+    const history = useHistory();
 
 
     useEffect(() => {
@@ -46,7 +49,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
 
         setupListeners();
 
-        // Cleanup the event listeners on component unmount
         return () => {
             if (showKeyboardListener) {
                 showKeyboardListener.remove();
@@ -68,12 +70,13 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
 
         const userCredentials = { username, password };
 
-        // Attempt to login via the remote API
         const loggedIn = await apiService.loginUser(userCredentials);
 
         if (loggedIn) {
-            onLoginSuccess(username);
+            onLoginSuccess();
+            history.push('/home')
         } else {
+            setAlertMessage('Please check your username and password.');
             setShowAlert(true);
         }
     };

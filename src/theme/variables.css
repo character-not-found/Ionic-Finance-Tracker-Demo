@@ -185,6 +185,11 @@ ion-tab-bar {
 	--background: var(--ion-color-tertiary);
 	--border: 0px;
 	--color-selected: var(--ion-color-primary);
+	padding-bottom: env(safe-area-inset-bottom);
+}
+
+ion-safe-area-top {
+	padding: 0;
 }
 
 ion-modal#edit-modal {

@@ -14,12 +14,14 @@ import {
 import { IonReactRouter } from '@ionic/react-router';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { home, cashOutline, listOutline, readerOutline } from 'ionicons/icons';
+import { SplashScreen } from '@capacitor/splash-screen';
 
 import Home from './pages/Home';
 import LoginPage from './pages/LoginPage';
 import IncomePage from './pages/IncomePage';
 import ExpensesPage from './pages/ExpensesPage';
 import ManagementPage from './pages/ManagementPage';
+import apiService from './services/apiService';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -54,57 +56,71 @@ import './theme/variables.css';
 setupIonicReact();
 
 const AppContent: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const location = useLocation();
 
-    useEffect(() => {
-        if (isPlatform('capacitor')) {
-            // Set the style and hide the status bar when the component mounts
-            StatusBar.setStyle({ style: Style.Dark });
-            StatusBar.hide();
+  useEffect(() => {
+      if (isPlatform('capacitor')) {
+          // Set the style and hide the status bar when the component mounts
+          StatusBar.setStyle({ style: Style.Dark });
+          StatusBar.hide();
 
-            // The interval is also wrapped in the platform check
-            const interval = setInterval(() => {
-                StatusBar.hide();
-            }, 2000);
+          // The interval is also wrapped in the platform check
+          const interval = setInterval(() => {
+              StatusBar.hide();
+          }, 2000);
 
-            return () => {
-                clearInterval(interval);
-            };
-        }
-    }, []);
+          return () => {
+              clearInterval(interval);
+          };
+      }
+  }, []);
+
+  useEffect(() => {
+    const initializeAuth = async () => {
+      const isValid = await apiService.checkSession();
+      console.log("Is valid? ", isValid)
+      setIsAuthenticated(isValid);
+      SplashScreen.hide({ fadeOutDuration: 100 })
+    };
+    initializeAuth();
+  }, []);  
 
   const handleLoginSuccess = () => {
-    setIsLoggedIn(true);
+    setIsAuthenticated(true);
   };
+
+  if (isAuthenticated === null) {
+    return <IonApp />;
+  }
   
-  const showTabs = isLoggedIn && !['/login'].includes(location.pathname);
+  const showTabs = isAuthenticated && !['/login'].includes(location.pathname);
 
   return (
     <IonTabs>
       <IonRouterOutlet>
         {/* The Login page route, without tabs */}
         <Route exact path="/login">
-          {isLoggedIn ? <Redirect to="/home" /> : <LoginPage onLoginSuccess={handleLoginSuccess} />}
+          {isAuthenticated ? <Redirect to="/home" /> : <LoginPage onLoginSuccess={handleLoginSuccess} />}
         </Route>
         
         {/* All other app routes that require authentication and have tabs */}
         <Route exact path="/home">
-          {isLoggedIn ? <Home /> : <Redirect to="/login" />}
+          {isAuthenticated ? <Home /> : <Redirect to="/login" />}
         </Route>
         <Route exact path="/income">
-          {isLoggedIn ? <IncomePage /> : <Redirect to="/income" />}
+          {isAuthenticated ? <IncomePage /> : <Redirect to="/income" />}
         </Route>
         <Route exact path="/expenses">
-          {isLoggedIn ? <ExpensesPage /> : <Redirect to="/login" />}
+          {isAuthenticated ? <ExpensesPage /> : <Redirect to="/login" />}
         </Route>
         <Route exact path="/management">
-          {isLoggedIn ? <ManagementPage /> : <Redirect to="/login" />}
+          {isAuthenticated ? <ManagementPage /> : <Redirect to="/login" />}
         </Route>
 
         {/* Default route redirect */}
         <Route exact path="/">
-          <Redirect to="/login" />
+            <Redirect to={isAuthenticated ? "/home" : "/login"} />
         </Route>
       </IonRouterOutlet>
       
