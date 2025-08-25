@@ -19,8 +19,8 @@ const getApiBaseUrl = () => {
   }
 };
 
-//const API_BASE_URL = "https://demotuk.duckdns.org";
-const API_BASE_URL = getApiBaseUrl();
+const API_BASE_URL = "https://demotuk.duckdns.org";
+//const API_BASE_URL = getApiBaseUrl();
 
 interface UserCredentials {
   username: string;
@@ -128,7 +128,7 @@ const apiService = {
       });
 
       if (response.status === 200 && response.data && response.data.access_token) {
-          console.log('Login successful.');
+          await new Promise(resolve => setTimeout(resolve, 500));
           return true;
       } else {
           console.error('Login failed with status:', response.status, 'Error:', response.data);
@@ -189,7 +189,6 @@ const apiService = {
         totalMonthlyExpenses: monthlySummary.total_monthly_expenses,
       };
 
-      console.log('Dashboard summary fetched successfully:', dashboardSummary);
       return dashboardSummary;
     } catch (error) {
       console.error('Failed to fetch dashboard summary data:', error);
@@ -295,7 +294,6 @@ const apiService = {
       });
 
       if (response.status >= 200 && response.status < 300 && response.data) {
-        console.log('Income added successfully:', response.data);
         return true;
       } else {
         const errorMessage = `Failed to add income with status: ${response.status}, message: ${JSON.stringify(response.data)}`;
@@ -326,7 +324,6 @@ const apiService = {
       });
 
       if (response.status >= 200 && response.status < 300 && response.data) {
-        console.log('Daily Expense added successfully:', response.data);
         return true;
       } else {
         const errorMessage = `Failed to add daily expense with status: ${response.status}, message: ${JSON.stringify(response.data)}`;
@@ -357,7 +354,6 @@ const apiService = {
       });
 
       if (response.status >= 200 && response.status < 300 && response.data) {
-        console.log('Fixed Cost added successfully:', response.data);
         return true;
       } else {
         const errorMessage = `Failed to add fixed cost with status: ${response.status}, message: ${JSON.stringify(response.data)}`;
@@ -379,7 +375,6 @@ const apiService = {
       });
 
       if (response.status === 200 && response.data && typeof response.data === 'object') {
-        console.log("Global summary fetched successfully:", response.data);
         const data: GlobalSummary = await response.data;
         return {
           ...data,
@@ -407,7 +402,6 @@ const apiService = {
 
       if (response.status >= 200 && response.status < 300) {
         if (response.data && Array.isArray(response.data)) {
-            console.log("All individual income records fetched successfully:", response.data);
 
             const sortedData = response.data.sort((a, b) => {
               const dateComparison = new Date(b.income_date).getTime() - new Date(a.income_date).getTime();
@@ -418,7 +412,6 @@ const apiService = {
           });
 
           const slicedData = sortedData.slice(0, 20);
-          console.log("Sorted income records:", slicedData);
           return slicedData;
         } else {
           console.error('API response for income records was empty or malformed.');
@@ -443,7 +436,6 @@ const apiService = {
 
       if (response.status >= 200 && response.status < 300) {
         if (response.data && Array.isArray(response.data)) {
-          console.log("All daily expense records fetched successfully:", response.data);
 
           const sortedData = response.data.sort((a, b) => {
             const dateComparison = new Date(b.cost_date).getTime() - new Date(a.cost_date).getTime();
@@ -454,7 +446,6 @@ const apiService = {
           });
 
           const slicedData = sortedData.slice(0, 20);
-          console.log("Sorted daily expense records:", slicedData);
           return slicedData;
         } else {
           console.error('API response for daily expenses was empty or malformed.');
@@ -478,7 +469,6 @@ const apiService = {
 
       if (response.status >= 200 && response.status < 300) {
         if (response.data && Array.isArray(response.data)) {
-          console.log("All fixed cost records fetched successfully:", response.data);
 
           const sortedData = response.data.sort((a, b) => {
             const dateComparison = new Date(b.cost_date).getTime() - new Date(a.cost_date).getTime();
@@ -489,7 +479,6 @@ const apiService = {
           });
 
           const slicedData = sortedData.slice(0, 20);
-          console.log("Sorted fixed cost records:", slicedData);
           return slicedData;
         } else {
           console.error('API response for fixed costs was empty or malformed.');
@@ -554,7 +543,6 @@ const apiService = {
       });
 
       if (response.status >= 200 && response.status < 300) {
-        console.log(`Successfully updated ${record.dataType} record with doc_id: ${record.doc_id}`);
         return true;
       } else {
         const errorData = response.data;
@@ -607,7 +595,6 @@ const apiService = {
       });
 
       if (response.status >= 200 && response.status < 300) {
-          console.log(`Successfully deleted ${record.dataType} record with doc_id: ${record.doc_id}`);
           return true;
       } else {
           const errorData = response.data;
@@ -622,16 +609,13 @@ const apiService = {
 
   checkSession: async (): Promise<boolean> => {
     try {
-      console.log("Starting session check...");
       const response = await CapacitorHttp.get({
         url: `${API_BASE_URL}/session_check`,
       });
 
       if (response.status === 200 && response.data && response.data.authenticated) {
-        console.log("Session check successful. User is authenticated.");
         return true;
       } else {
-        console.log("Session check failed. User is not authenticated.");
         return false;
       }
     } catch (error: any) {

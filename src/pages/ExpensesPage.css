@@ -134,17 +134,17 @@ ion-content {
 }
 
 .expenses-content.keyboard-up-numeric {
-    transform: translateY(-10%);
+    transform: translateY(0%);
 }
 
 .expenses-content.keyboard-up-daily {
-    transform: translateY(-10%);
+    transform: translateY(0%);
 }
 
 .expenses-content.keyboard-up-fixed.keyboard-up-numeric {
-    transform: translateY(-40%);
+    transform: translateY(0%);
 }
 
 .expenses-content.keyboard-up-fixed {
-    transform: translateY(-40%);    
+    transform: translateY(0%);    
 }

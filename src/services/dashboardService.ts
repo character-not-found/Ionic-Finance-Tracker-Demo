@@ -16,13 +16,11 @@ export interface ChartData {
  * @returns A promise that resolves with the DashboardSummary data.
  */
 export const fetchDashboardSummaryData = async (year: number, month: number): Promise<DashboardSummary> => {
-    console.log("Fetching dashboard summary data from service.");
     try {
         const data = await apiService.fetchDashboardSummary(year, month);
         if (!data) {
             throw new Error('No data received from API');
         }
-        console.log("Service fetched summary data:", data);
         return data;
     } catch (err) {
         console.error('Failed to fetch dashboard summary data in service:', err);
@@ -35,7 +33,6 @@ export const fetchDashboardSummaryData = async (year: number, month: number): Pr
  * @returns A promise that resolves with the ChartData.
  */
 export const fetchIncomeCategoryChartData = async (year: number, month: number): Promise<ChartData> => {
-    console.log("Fetching income category data from service.");
     try {
         const data = await apiService.fetchMonthlyIncomeByCategory(year, month);
         const chartData: ChartData = {
@@ -46,7 +43,6 @@ export const fetchIncomeCategoryChartData = async (year: number, month: number):
             })),
         };
 
-        console.log("Service fetched income category data:", chartData);
         return chartData;
     } catch (err) {
         console.error('Failed to fetch income category data in service:', err);
@@ -59,7 +55,6 @@ export const fetchIncomeCategoryChartData = async (year: number, month: number):
  * @returns A promise that resolves with the ChartData.
  */
 export const fetchExpenseCategoryChartData = async (year: number, month: number): Promise<ChartData> => {
-    console.log("Fetching expense category data from service.");
     try {
         const apiData: ChartData = await apiService.fetchMonthlyExpenseByCategory(year, month);
 
@@ -71,7 +66,6 @@ export const fetchExpenseCategoryChartData = async (year: number, month: number)
             })),
         };
 
-        console.log("Service fetched expense category data:", chartData);
         return chartData;
     } catch (err) {
         console.error('Failed to fetch expense category data in service:', err);
@@ -80,13 +74,11 @@ export const fetchExpenseCategoryChartData = async (year: number, month: number)
 };
 
 export const fetchGlobalSummaryData = async (): Promise<GlobalSummary | null> => {
-    console.log("Fetching global summary data from service.");
     try {
         const data = await apiService.fetchGlobalSummary();
         if (!data) {
             throw new Error('No data received from API');
         }
-        console.log("Service fetched global summary data:", data);
         return data;
     } catch (err) {
         console.error('Failed to fetch global summary data in service:', err);

@@ -96,7 +96,7 @@ const IncomePage: React.FC = () => {
                                                 <IonInput
                                                     type="date"
                                                     value={incomeDate}
-                                                    onIonChange={e => setIncomeDate(e.detail.value!)}
+                                                    onIonInput={e => setIncomeDate(e.detail.value!)}
                                                     required
                                                 />
                                             </IonItem>
@@ -106,7 +106,7 @@ const IncomePage: React.FC = () => {
                                                     name="toursRevenue"
                                                     type="number"
                                                     value={toursRevenue}
-                                                    onIonChange={e => setToursRevenue(e.detail.value === '' ? 0 : parseFloat(e.detail.value!))}
+                                                    onIonInput={e => setToursRevenue(e.detail.value === '' ? 0 : parseFloat(e.detail.value!))}
                                                     step="1"
                                                     min="0"
                                                 />
@@ -117,7 +117,7 @@ const IncomePage: React.FC = () => {
                                                     name="transfersRevenue"
                                                     type="number"
                                                     value={transfersRevenue}
-                                                    onIonChange={e => setTransfersRevenue(e.detail.value === '' ? 0 : parseFloat(e.detail.value!))}
+                                                    onIonInput={e => setTransfersRevenue(e.detail.value === '' ? 0 : parseFloat(e.detail.value!))}
                                                     step="1"
                                                     min="0"
                                                 />
@@ -128,7 +128,7 @@ const IncomePage: React.FC = () => {
                                                     name="hoursWorked"
                                                     type="number"
                                                     value={hoursWorked}
-                                                    onIonChange={e => setHoursWorked(e.detail.value === '' ? 0 : parseFloat(e.detail.value!))}
+                                                    onIonInput={e => setHoursWorked(e.detail.value === '' ? 0 : parseFloat(e.detail.value!))}
                                                     step="1"
                                                     min="0"
                                                 />
