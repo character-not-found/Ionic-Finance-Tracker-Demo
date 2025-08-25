@@ -181,11 +181,11 @@ ion-modal ion-input {
 }
 
 .management-content.keyboard-up-alphanumeric {
-    transform: translateY(-19%);
+    transform: translateY(0%);
 }
 
 .management-content.keyboard-up-numeric {
-    transform: translateY(-19%);
+    transform: translateY(0%);
 }
 
 .alert-message-pre-line {

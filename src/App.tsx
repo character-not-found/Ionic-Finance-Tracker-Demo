@@ -79,7 +79,6 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     const initializeAuth = async () => {
       const isValid = await apiService.checkSession();
-      console.log("Is valid? ", isValid)
       setIsAuthenticated(isValid);
       SplashScreen.hide({ fadeOutDuration: 100 })
     };

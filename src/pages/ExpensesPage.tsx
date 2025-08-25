@@ -192,7 +192,7 @@ const ExpensesPage: React.FC = () => {
                                                         name="dailyExpenseDate"
                                                         type="date"
                                                         value={dailyExpenseDate}
-                                                        onIonChange={e => setDailyExpenseDate(e.detail.value!)}
+                                                        onIonInput={e => setDailyExpenseDate(e.detail.value!)}
                                                         required
                                                     />
                                                 </IonItem>
@@ -202,7 +202,7 @@ const ExpensesPage: React.FC = () => {
                                                         name="dailyExpenseAmount"
                                                         type="number"
                                                         value={dailyExpenseAmount}
-                                                        onIonChange={e => setDailyExpenseAmount(parseFloat(e.detail.value!))}
+                                                        onIonInput={e => setDailyExpenseAmount(parseFloat(e.detail.value!))}
                                                         onIonFocus={() => handleFocus('number')}
                                                         step="1"
                                                         min="0"
@@ -215,7 +215,7 @@ const ExpensesPage: React.FC = () => {
                                                         name="dailyExpenseDescription"
                                                         type="text"
                                                         value={dailyExpenseDescription}
-                                                        onIonChange={e => setDailyExpenseDescription(e.detail.value!)}
+                                                        onIonInput={e => setDailyExpenseDescription(e.detail.value!)}
                                                         onIonFocus={() => handleFocus('text')}
                                                         required
                                                     />
@@ -262,7 +262,7 @@ const ExpensesPage: React.FC = () => {
                                                         name="fixedCostDate"
                                                         type="date"
                                                         value={fixedCostDate}
-                                                        onIonChange={e => setFixedCostDate(e.detail.value!)}
+                                                        onIonInput={e => setFixedCostDate(e.detail.value!)}
                                                         required
                                                     />
                                                 </IonItem>
@@ -272,7 +272,7 @@ const ExpensesPage: React.FC = () => {
                                                         name="fixedCostAmount"
                                                         type="number"
                                                         value={fixedCostAmount}
-                                                        onIonChange={e => setFixedCostAmount(parseFloat(e.detail.value!))}
+                                                        onIonInput={e => setFixedCostAmount(parseFloat(e.detail.value!))}
                                                         onIonFocus={() => handleFocus('number')}
                                                         step="1"
                                                         min="0"
@@ -285,7 +285,7 @@ const ExpensesPage: React.FC = () => {
                                                         name="fixedCostDescription"
                                                         type="text"
                                                         value={fixedCostDescription}
-                                                        onIonChange={e => setFixedCostDescription(e.detail.value!)}
+                                                        onIonInput={e => setFixedCostDescription(e.detail.value!)}
                                                         onIonFocus={() => handleFocus('text')}
                                                         required
                                                     />
@@ -324,7 +324,7 @@ const ExpensesPage: React.FC = () => {
                                                         name="fixedCostRecipient"
                                                         type="text"
                                                         value={fixedCostRecipient}
-                                                        onIonChange={e => setFixedCostRecipient(e.detail.value!)}
+                                                        onIonInput={e => setFixedCostRecipient(e.detail.value!)}
                                                         onIonFocus={() => handleFocus('text')}
                                                     />
                                                 </IonItem>

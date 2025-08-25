@@ -127,7 +127,6 @@ const ManagementPage: React.FC = () => {
                 const success = await apiService.deleteRecord(itemToDelete);
                 if (success) {
                     await fetchAllData(); 
-                    console.log(`Successfully deleted ${itemToDelete.dataType} record with id: ${itemToDelete.doc_id}`);
                 } else {
                     console.error('Failed to delete record.');
                 }
@@ -149,7 +148,6 @@ const ManagementPage: React.FC = () => {
         const success = await apiService.updateRecord(editedRecord);
 
         if (success) {
-            console.log('Successfully saved edited record:', editedRecord);
             await fetchAllData(); 
             setIsModalOpen(false);
         } else {
@@ -221,7 +219,7 @@ const ManagementPage: React.FC = () => {
                 <IonInput
                     type={field.type as 'text' | 'number' | 'date'}
                     value={editedRecord[field.key as keyof ManagementRecord]}
-                    onIonChange={e => handleInputChange(e, field.key as keyof ManagementRecord)}
+                    onIonInput={e => handleInputChange(e, field.key as keyof ManagementRecord)}
                     onIonFocus={() => handleFocus(field.type as 'text' | 'number' | 'date')}
                 />
             )}

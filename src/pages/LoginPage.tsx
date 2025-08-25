@@ -13,6 +13,7 @@ import {    IonPage,
     IonAlert,
     IonHeader,
     IonToolbar,
+    IonInputPasswordToggle,
 } from '@ionic/react';
 import { Keyboard } from '@capacitor/keyboard';
 import { type PluginListenerHandle } from '@capacitor/core';
@@ -60,10 +61,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
     }, []);
     
     const handleLogin = async () => {
-        console.log('Login attempt started.');
 
         if (!username || !password) {
-            console.log('Login attempt failed: Missing username or password.');
             setShowAlert(true);
             return;
         }
@@ -106,7 +105,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                                         placeholder="Enter your username"
                                         fill="outline"
                                         value={username}
-                                        onIonChange={(e) => setUsername(e.detail.value!)}
+                                        onIonInput={(e) => setUsername(e.detail.value ?? "")}
                                         className='ion-margin-bottom'
                                     />
                                     <IonInput
@@ -116,9 +115,11 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                                         placeholder="Enter your password"
                                         fill="outline"
                                         value={password}
-                                        onIonChange={(e) => setPassword(e.detail.value!)}
+                                        onIonInput={(e) => setPassword(e.detail.value ?? "")}
                                         className='ion-margin-bottom'
-                                    />
+                                    >
+                                        <IonInputPasswordToggle slot='end'></IonInputPasswordToggle>
+                                    </IonInput>
                                     <IonButton
                                         expand="full"
                                         type="submit"
